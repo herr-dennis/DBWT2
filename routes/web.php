@@ -11,3 +11,8 @@ Route::get('/isloggedin', [App\Http\Controllers\AuthController::class, 'islogged
 Route::get("/", function (){
     return view('mainPageView');
 });
+
+
+Route::get('articles', function (\Illuminate\Http\Request $request) {
+    return app()->make('\App\Http\Controllers\MainController')->getArticles($request);
+});
