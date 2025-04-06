@@ -4,10 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-/**
- * Write static login information to the session.
- * Use for test purposes.
- */
 class AuthController extends Controller
 {
     public function login(Request $request) {
