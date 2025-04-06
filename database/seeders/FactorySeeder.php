@@ -24,6 +24,7 @@ class FactorySeeder extends Seeder
                 'ab_name' => $faker->name,
                 'ab_mail' => $faker->email,
                 'ab_password' =>  bcrypt($faker->password()),
+
             ]);
         }
 
