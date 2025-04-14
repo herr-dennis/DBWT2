@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Ab_articlecategory;
 use App\Models\ab_articles;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
@@ -46,4 +47,21 @@ class MainController extends Controller
         return view('articlesView' ,['data'=>$data]);
 
     }
+
+    /**
+     *
+     */
+    public function getCategories()
+    {
+        try {
+            $data = Ab_articlecategory::query()->select("ab_name")->get();
+            return response()->json($data);
+        } catch (\Exception $exception) {
+            return response()->json([
+                'error' => $exception->getMessage()
+            ], 500);
+        }
+    }
+
+
 }

@@ -1,8 +1,5 @@
 @extends("layouts.defaultLayout")
 @section("title", "Home")
-
-
-
 @section("main-content")
 <h2>Home....</h2>
 
