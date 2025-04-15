@@ -12,10 +12,12 @@
         <p style="color: red">{{\Illuminate\Support\Facades\Session::get("msg")}}</p>
     @endif
 
-    <table border="1">
+
+    <script src="{{asset("js/warenkorb.js")}}" ></script>
+    <table class="table" border="1">
         <thead>
         <tr>
-            <th>ID</th>
+            <th>+</th>
             <th>Name</th>
             <th>Preis</th>
             <th>Beschreibung</th>
@@ -27,7 +29,12 @@
         <tbody>
         @foreach($data as $item)
             <tr>
-                <td>{{ $item['id'] }}</td>
+                <td>
+                    <div class="choice">
+                        <input name="id" type="hidden" value="{{$item["ab_name"]}}">
+                        <label>+</label>
+                    </div>
+                </td>
                 <td>{{ $item['ab_name'] }}</td>
                 <td>{{ $item['ab_price'] }} €</td>
                 <td>{{ $item['ab_description'] }}</td>
@@ -43,7 +50,7 @@
                         }
                     }
                 @endphp
-                <td><img style="width: 100px; height: auto " src="{{  $imageUrl }}" alt="Kein Bild vorhanden"></td>
+                <td><img style="width: 100px; height: auto;" src="{{$imageUrl??asset("images/see-no-evil-3444212_640.jpg") }}" alt="Kein Bild vorhanden"></td>
             </tr>
         @endforeach
         </tbody>

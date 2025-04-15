@@ -16,6 +16,13 @@ Route::get("/", function (){
 Route::get('articles', function (\Illuminate\Http\Request $request) {
     return app()->make('\App\Http\Controllers\MainController')->getArticles($request);
 });
+Route::Post('articles', function (\Illuminate\Http\Request $request) {
+    return app()->make('\App\Http\Controllers\MainController')->getArticles($request);
+});
+
 Route::get('getCategories', function () {
     return app()->make('\App\Http\Controllers\MainController')->getCategories();
 });
+Route::get('newarticle', function () {
+    return app()->make('\App\Http\Controllers\MainController')->getNewArticle();
+    });

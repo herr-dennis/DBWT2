@@ -1,7 +1,5 @@
-
 @extends("banner.bannerView")
 <html>
-
 <head>
 
     {{--Wichtig für den Cache, somit wird immer die neustes CSS-Datei geladen.--}}
@@ -13,6 +11,9 @@
     <meta name="description" content="@yield("beschreibung")">
     <script src="{{ asset('js/nav.js') }}"></script>
 
+    @section("head")
+    @show
+
 </head>
 <body>
 <header>
@@ -20,7 +21,6 @@
 </header>
 
 <main>
-
     @section("main-content")
     @show
 </main>
