@@ -1,14 +1,14 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    // Daten vom Server laden
+
     fetch('/getCategories')
         .then(response => response.json())
         .then(data => {
 
-            // Mapping der Kategorien für das Menü
+            // Mapping der Kategorien
             const categories = data.map(cat => ({ title: cat.ab_name }));
 
-            // Menüstruktur definieren
+            // Menüstruktur
             const menuItems = [
                 { title: 'Home' },
                 {
@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const menuItemKategorien = document.getElementById('menuItem_Kategorien');
             if(menuItem) {
                 menuItem.addEventListener('click', function(event) {
-                    event.stopPropagation();  // Verhindert Klickpropagation
+                    event.stopPropagation();
                     const submenus = document.getElementsByClassName("submenu_Unternehmen");
                     for (let submenu of submenus) {
                         submenu.classList.toggle('active');  // Sichtbarkeit umschalten
@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         });
 
-    // Menü-Bau-Funktion
+    //Bau-Funktion
     function createMenu(items) {
         const container = document.createElement('div');
         container.className = 'menu-container';
@@ -85,7 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const aTag = document.createElement('a');
             aTag.textContent = item.title;
-            aTag.href = "#";
+            aTag.href = "/";
             li.appendChild(aTag);
 
             // Rekursiv: wenn Kinder vorhanden, Submenü erstellen
@@ -107,7 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         container.appendChild(ul);
 
-        // Mobile Ansicht: Toggle für Sichtbarkeit
+        // Mobile Ansicht Toggle für Sichtbarkeit
         btn.addEventListener("click", () => {
             ul.classList.toggle("visible");
         });

@@ -28,7 +28,7 @@
         </thead>
         <tbody>
         @foreach($data as $item)
-            <tr>
+            <tr id="row-{{$item['ab_name']}}">
                 <td>
                     <div class="choice">
                         <input name="id" type="hidden" value="{{$item["ab_name"]}}">

@@ -32,6 +32,7 @@
     #navMenu li {
         padding: 10px 20px;
         position: relative; /* Änders nichts visuell, Anker für Submenü */
+        z-index: 9999;
     }
 
     #navMenu a {
