@@ -26,3 +26,7 @@ Route::get('getCategories', function () {
 Route::get('newarticle', function () {
     return app()->make('\App\Http\Controllers\MainController')->getNewArticle();
     });
+
+Route::get('data' , function(){
+    return app()->make('\App\Http\Controllers\MainController')->getData();
+});

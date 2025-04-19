@@ -107,5 +107,9 @@ class MainController extends Controller
         return view("newArticleView");
     }
 
+   public function getData()
+   {
+       return view('dataView');
+   }
 
 }
