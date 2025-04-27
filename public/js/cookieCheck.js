@@ -1,6 +1,10 @@
 document.addEventListener("DOMContentLoaded", function() {
     // Banner nur anzeigen, wenn noch keine Entscheidung getroffen wurde
-    if (!localStorage.getItem("cookiesAccepted")) {
+   /* if (!localStorage.getItem("cookiesAccepted")) {
+        document.getElementById("cookie-banner").style.display = "block";
+    }*/
+
+    if( !document.cookie.includes("technicalCookiesAccepted")){
         document.getElementById("cookie-banner").style.display = "block";
     }
 });

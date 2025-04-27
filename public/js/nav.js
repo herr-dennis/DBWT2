@@ -85,9 +85,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const aTag = document.createElement('a');
             aTag.textContent = item.title;
-            aTag.href = "/";
+            if(!item.title === 'Kategorien'){
+                aTag.href = "";
+            }
             li.appendChild(aTag);
-
             // Rekursiv: wenn Kinder vorhanden, Submenü erstellen
             if (item.children) {
                 const unterMenu = createMenu(item.children);
