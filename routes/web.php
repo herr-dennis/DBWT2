@@ -13,6 +13,6 @@ Route::get("/", function (){
 });
 
 
-Route::get('articles', function (\Illuminate\Http\Request $request) {
+Route::get('/articles', function (\Illuminate\Http\Request $request) {
     return app()->make('\App\Http\Controllers\MainController')->getArticles($request);
 });

@@ -15,7 +15,7 @@ class DevelopmentDataSeeder extends Seeder
      */
     public function run()
     {
-        $this->seedUsers();
+//        $this->seedUsers();
         $this->seedArticles();
         $this->seedArticleCategories();
     }
@@ -59,21 +59,21 @@ class DevelopmentDataSeeder extends Seeder
         }
     }
 
-    private function seedUsers()
-    {
-        $csv = Reader::createFromPath(database_path('seeders/data/user.csv'), 'r');
-        $csv->setDelimiter(';');  // Trennzeichens auf ;
-        $csv->setHeaderOffset(0);    //Liest die erste Zeile für der as. Array ein
-
-        foreach ($csv as $item) {
-            DB::table('ab_user')->insert([
-                'id' => $item['id'],
-                'ab_name' => $item['ab_name'],
-                'ab_mail' => $item['ab_mail'],
-                'ab_password' => bcrypt($item['ab_password']), // Passwort hashen Blowfish-Algorithmus
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
-        }
-    }
+//    private function seedUsers()
+//    {
+//        $csv = Reader::createFromPath(database_path('seeders/data/user.csv'), 'r');
+//        $csv->setDelimiter(';');  // Trennzeichens auf ;
+//        $csv->setHeaderOffset(0);    //Liest die erste Zeile für der as. Array ein
+//
+//        foreach ($csv as $item) {
+//            DB::table('ab_user')->insert([
+//                'id' => $item['id'],
+//                'ab_name' => $item['ab_name'],
+//                'ab_mail' => $item['ab_mail'],
+//                'ab_password' => bcrypt($item['ab_password']), // Passwort hashen Blowfish-Algorithmus
+//                'created_at' => now(),
+//                'updated_at' => now(),
+//            ]);
+//        }
+//    }
 }
