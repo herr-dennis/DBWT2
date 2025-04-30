@@ -5,7 +5,6 @@
 /* Desktop*/
 @media(min-width:800px)and (max-width: 3000px) {
 
-
     #navMenu {
         max-width: 90%;
         display: flex;
@@ -25,7 +24,7 @@
         background-color: grey;
         padding: 0;
         margin: 0;
-        list-style: none; /* Entfernt die Punkte */
+        list-style: none;
         flex-wrap: wrap; /* Ermöglicht das Umfließen der Liste */
     }
 
@@ -35,12 +34,17 @@
         z-index: 9999;
     }
 
+    #navMenu li :hover{
+       background-color: rgb(73, 63, 56, 0.8);
+    }
+
     #navMenu a {
         font-size: 20px;
         text-decoration: none;
         color: white;
         display: block;
-        min-width: 100px; /*  Mindestbreite */
+        min-width: 100px;
+        text-align: center;
     }
 
     /* Submenü */

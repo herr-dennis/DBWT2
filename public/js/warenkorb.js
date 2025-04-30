@@ -16,17 +16,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Choice ist ein Container mit dem Input der Artikelinformationen, die in der View erzeugt wurde
     let divs = document.getElementsByClassName('choice');
+
     //Laufen über alle Choice-Container, dort befindet sich ein hidden-input Feld drin, mit den Daten
     for (let i = 0; i < divs.length; i++) {
+
         //Zu jeden Choice-Container wird ein EventListener eingefügt
         divs[i].addEventListener('click', (e) => {
+
              // Holt den Aktuellen Choice-Container
             const hiddenInput = divs[i].querySelector('input[name="id"]');
+
             //Prüft auf Dups..
             if(proofDuplicates(hiddenInput.value)){
             hideArtikel(hiddenInput.value);
             const insertWarenkorb = document.createElement('li');
-            //Logik für das Entfernen des Artikel aus dem Warenkorb
+
+            //Logik für das Entfernen des Artikels aus dem Warenkorb
             addEventListenerByLi(insertWarenkorb, hiddenInput.value);
             const label = document.createElement('label');
             label.textContent = hiddenInput.value;

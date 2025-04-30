@@ -1,14 +1,22 @@
 @extends("layouts.defaultLayout")
 @section("title", "Home")
 @section("main-content")
-<h2>Abalo</h2>
+<h1 class="h1Tag" >Abalo</h1>
 
 
       <p class="defaultContainer" >Herzlich willkommen, Sie suchen einen Artikel; etwas Neues, was alt ist?
           Nulla consequat massa quis
           enim. Donec pede justo, fringilla vel, aliquet nec,
       </p>
-    <button class="btn" id="artikelBtn" > Zu den Artikeln..</button>
+
+<hr>
+
+      <div class="btnContainer">
+          <button class="btn" id="artikelBtn" > Zu den Artikeln..</button>
+          <button class="btn" id="newArticle">Neue Artikel einfügen</button>
+          <button class="btn" id="3-ajax1-staticBtn">Aufgabe 1</button>
+
+      </div>
 
     <script>
       document.addEventListener("DOMContentLoaded", function (){
@@ -16,11 +24,23 @@
           artikelBtn.addEventListener("click", function (){
               location.href="/articles";
           })
+
+          const newBtn = document.getElementById("newArticle");
+          newBtn.addEventListener("click", function (){
+              location.href="/newarticle";
+          })
+
+          const ajax1staticBtn = document.getElementById("3-ajax1-staticBtn");
+          ajax1staticBtn.addEventListener("click", function (){
+              location.href="/3-ajax1-static";
+          })
+
+
       })
 
     </script>
 
-
+<hr>
 <p class="defaultContainer">Lorem ipsum dolor sit amet, consectetuer adipiscing
     elit. Aenean commodo ligula eget dolor. Aenean massa
     <strong>strong</strong>. Cum sociis natoque penatibus

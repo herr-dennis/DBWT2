@@ -35,25 +35,35 @@ document.addEventListener('DOMContentLoaded', () => {
             const menuItem = document.getElementById("menuItem_Unternehmen");
             const menuItemKategorien = document.getElementById('menuItem_Kategorien');
             if(menuItem) {
-                menuItem.addEventListener('click', function(event) {
+                const submenus = document.getElementsByClassName("submenu_Unternehmen");
+                menuItem.addEventListener('mouseenter', function(event) {
                     event.stopPropagation();
-                    const submenus = document.getElementsByClassName("submenu_Unternehmen");
                     for (let submenu of submenus) {
                         submenu.classList.toggle('active');  // Sichtbarkeit umschalten
                     }
                 });
+                menuItem.addEventListener('mouseleave', () => {
+                    for (let submenu of submenus) {
+                        submenu.classList.remove('active');
+                    }
+                });
             }
+
             if(menuItemKategorien) {
-                menuItemKategorien.addEventListener('click', function(event) {
+                const submenus = document.getElementsByClassName("submenu_kategorien");
+                menuItemKategorien.addEventListener('mouseenter', function(event) {
                     event.stopPropagation();  // Verhindert Klickpropagation
-                    const submenus = document.getElementsByClassName("submenu_kategorien");
                     for (let submenu of submenus) {
                         submenu.classList.toggle('active');  // Sichtbarkeit umschalten
                     }
                 });
+                menuItemKategorien.addEventListener('mouseleave', () => {
+                    for (let submenu of submenus) {
+                        submenu.classList.remove('active');
+                    }
+                });
+
             }
-
-
 
         });
 
@@ -85,8 +95,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const aTag = document.createElement('a');
             aTag.textContent = item.title;
-            if(!item.title === 'Kategorien'){
+            if(item.title === 'Kategorien'){
                 aTag.href = "";
+            }
+            else {
+                aTag.href = "/";
             }
             li.appendChild(aTag);
             // Rekursiv: wenn Kinder vorhanden, Submenü erstellen
