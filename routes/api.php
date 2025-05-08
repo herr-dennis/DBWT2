@@ -1,5 +1,6 @@
 <?php
 use App\Models\ab_articles;
+use App\Models\warenkorb;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
@@ -76,4 +77,17 @@ Route::delete('/articles/{id}', function ($id) {
     } catch (\Exception $e) {
         return response()->json(['error' => $e->getMessage()], 500);
     }
+});
+
+Route::post("/warenkorb/articles", function(Request $request){
+
+    $user_id = $request->input("id");
+
+
+    try {
+        $warenkorb = warenkorb::query()->insert([
+
+        ])
+    }
+
 });
