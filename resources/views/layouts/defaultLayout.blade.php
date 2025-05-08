@@ -1,4 +1,5 @@
 @extends("banner.bannerView")
+    <!DOCTYPE html>
 <html>
 <head>
 
@@ -9,8 +10,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@yield('title')</title>
     <meta name="description" content="@yield("beschreibung")">
-    <script src="{{ asset('js/nav.js') }}"></script>
-
+     {{--<script src="{{ asset('js/nav.js') }}"></script>--}}
+    <script src="{{ asset('js/navObject.js') }}"></script>
     @section("head")
     @show
 

@@ -1,6 +1,7 @@
 @extends("layouts.defaultLayout")
 @section("title", "Home")
 @section("main-content")
+    <script src="{{asset("/js/mainPage.js")}}"></script>
 <h1 class="h1Tag" >Abalo</h1>
 
 
@@ -11,10 +12,11 @@
 
 <hr>
 
-      <div class="btnContainer">
+      <div id="btnContainer" class="btnContainer">
           <button class="btn" id="artikelBtn" > Zu den Artikeln..</button>
           <button class="btn" id="newArticle">Neue Artikel einfügen</button>
           <button class="btn" id="3-ajax1-staticBtn">Aufgabe 1</button>
+          <button class="btn" id="adminBtn"> Artikel löschen (Admin) </button>
 
       </div>
 
@@ -67,7 +69,12 @@
     <button class="w3-button w3-display-left" onclick="plusDivs(-1)">&#10094;</button>
     <button class="w3-button w3-display-right" onclick="plusDivs(+1)">&#10095;</button>
 </div>
+<div class="defaultContainer" >
+    <p>Sie möchten persönlich mit uns reden ? Dann kommen Sie vorbei!</p>
+</div>
 
+<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d5047.6547912602255!2d6.078152792546339!3d50.76023409192758!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47c09b924b9ddc91%3A0x37a64c44b566a700!2sFH%20Aachen%2C%20Geb%C3%A4ude%20D!5e0!3m2!1sde!2sde!4v1746440201711!5m2!1sde!2sde" width="600" height="450"
+        style="border:0; margin:25px " allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
 <script>
 
     var slideIndex = 1;

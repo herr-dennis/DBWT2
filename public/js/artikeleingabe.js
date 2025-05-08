@@ -104,14 +104,14 @@ document.addEventListener('DOMContentLoaded', function() {
         //Erstellt ein XML Objekt
         let xhr = new XMLHttpRequest();
 
-        xhr.open("POST", "/articles", true);
+        xhr.open("POST", "/api/articles", true);
         //Stellt den Antwort-Typ auf Json!!
         xhr.responseType = 'json';
         //Setzt der Token in den HTTP Header
         xhr.setRequestHeader("X-CSRF-TOKEN", token);
         //Setzt die Information als HTML Tag, dass es JSON ist
         xhr.setRequestHeader("Content-Type", "application/json");
-        //Sendet die daten.
+
         xhr.send(JSON.stringify(data));
 
         // onredystatechange, wenn ist der Status ändert
@@ -124,7 +124,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     alertText.textContent=xhr.response.message;
                     alertText.classList= "msg";
                 } else {
-                    console.error("❌ Fehler:", xhr.response.message);
+                    console.error("❌ Fehler:", xhr.response.error);
                 }
             }
             //Wird nur aufgerufen, wenn es ein Netzwerkfehler gibt. Keine Internetverbindung usw...

@@ -1,15 +1,19 @@
 document.addEventListener('DOMContentLoaded', () => {
 
+    let categories;
 
-    fetch('/getCategories')
-        .then(response => response.json())
-        .then(data => {
 
-            // Mapping der Kategorien
-            const categories = data.map(cat => ({ title: cat.ab_name }));
+    getKategories(function (response){
+        if (response.error) {
+            console.error("Fehler beim Laden der Kategorien:", response.error);
+        } else {
+            categories = response;
+            console.log("Kategorien erfolgreich geladen:", categories);
+        }
+    });
 
-            // Menüstruktur
-            const menuItems = [
+
+    const menuItems = [
                 { title: 'Home' },
                 {
                     title: 'Kategorien',
@@ -22,7 +26,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         { title: 'Philosophie' },
                         { title: 'Karriere' }
                     ]
-                }
+                },
+                { title: 'Einloggen' }
             ];
 
             // Menü in das DOM einfügen
@@ -65,7 +70,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
             }
 
-        });
 
     //Bau-Funktion
     function createMenu(items) {
@@ -93,6 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 li.id = 'menuItem_Kategorien';
             }
 
+
             const aTag = document.createElement('a');
             aTag.textContent = item.title;
             if(item.title === 'Kategorien'){
@@ -101,7 +106,22 @@ document.addEventListener('DOMContentLoaded', () => {
             else {
                 aTag.href = "/";
             }
+            //Logik für der Einloggen, ruft auth() auf für die Überprüfung
+            if(item.title==="Einloggen"){
+                  aTag.addEventListener("click",function (){
+
+                      auth(function(response) {
+                          if (response.error) {
+                              console.error("Fehler beim Login:", response.error);
+                          } else {
+                              console.log("Eingeloggt als:", response.user);
+                          }
+                      });
+
+                  })
+            }
             li.appendChild(aTag);
+
             // Rekursiv: wenn Kinder vorhanden, Submenü erstellen
             if (item.children) {
                 const unterMenu = createMenu(item.children);
@@ -127,6 +147,55 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         return container;
+    }
+
+
+    function auth(callback) {
+        const xhr_auth = new XMLHttpRequest();
+        xhr_auth.open("POST", "/login", true);
+        xhr_auth.responseType = 'json';
+        xhr_auth.setRequestHeader("Content-Type", "application/json");
+
+        xhr_auth.onreadystatechange = function () {
+            if (xhr_auth.readyState === 4) {
+                if (xhr_auth.status === 200) {
+                    callback(xhr_auth.response);
+                    createAdminBtn();
+                } else {
+                    callback({ error: xhr_auth.statusText });
+                }
+            }
+        };
+
+        xhr_auth.onerror = function () {
+            callback({ error: "Netzwerkfehler" });
+        };
+
+        xhr_auth.send();
+    }
+
+
+    function getKategories(callback){
+        const xhr_kate = new XMLHttpRequest();
+        xhr_kate.open("GET", "/getCategories", true);
+        xhr_kate.responseType = 'json';
+        xhr_kate.setRequestHeader("Content-Type", "application/json");
+
+        xhr_kate.onreadystatechange = function () {
+            if (xhr_kate.readyState === 4) {
+                if (xhr_kate.status === 200) {
+                    callback(xhr_kate.response);
+                } else {
+                    callback({ error: xhr_kate.statusText });
+                }
+            }
+        };
+
+        xhr_kate.onerror = function () {
+            callback({ error: "Netzwerkfehler" });
+        };
+
+        xhr_kate.send();
     }
 
 });
