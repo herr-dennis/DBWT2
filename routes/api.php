@@ -87,7 +87,10 @@ Route::post("/warenkorb/articles", function(Request $request){
     try {
         $warenkorb = warenkorb::query()->insert([
 
-        ])
+        ]);
+    }
+    catch (\PHPUnit\Exception){
+
     }
 
 });
