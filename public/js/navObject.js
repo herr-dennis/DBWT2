@@ -127,16 +127,23 @@ document.addEventListener("DOMContentLoaded", () => {
                     aTag.addEventListener("click",(  event)=>{
                         event.preventDefault();
                         this.auth(function(response) {
-
-                         if (response.error) {
+                            if (response.error) {
                                 console.error("Fehler beim Login:", response.error);
                             } else {
-
                                 console.log("Eingeloggt als:", response.user);
                             } });
 
+                    });
 
+                    this.auth(function(response) {
+                        console.log("Aufruf auth ");
+                        if (response.auth_ === "true"){
+                           aTag.textContent="Eingeloggt als "+response.user;
+                        }
                     })
+
+
+
                 }
                 li.appendChild(aTag);
 
@@ -221,10 +228,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
         showAdmin(){
             const adminBtn = document.getElementById("adminBtn");
-            adminBtn.style.display = "block";
-            console.log("Admin");
-        }
 
+            if(adminBtn){
+                adminBtn.style.display = "block";
+            }
+
+
+        }
 
     }
 

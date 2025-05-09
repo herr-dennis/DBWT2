@@ -1,0 +1,9 @@
+SELECT a.*
+FROM ab_user u
+JOIN ab_shoppingcart sc ON sc.ab_creator_id = u.id
+JOIN ab_shoppingcart_item sci ON sci.ab_shoppingcart_id = sc.id
+JOIN ab_article a ON a.id = sci.ab_article_id
+WHERE u.id = :user_id;
+
+
+C:\Users\herrd>curl -X DELETE http://127.0.0.1:8000/api/shoppingcart/4/articles/1

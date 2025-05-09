@@ -1,5 +1,6 @@
 <?php
 use App\Models\ab_articles;
+use App\Models\Ab_User;
 use App\Models\warenkorb;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -64,33 +65,98 @@ Route::post('/articles', function (Request $request) {
     }
 });
 
-Route::delete('/articles/{id}', function ($id) {
+Route::delete('/shoppingcart/{shoppingcartid}/articles/{articleId}', function ($shoppingcartid, $articleId) {
     try {
-        $deleted = ab_articles::destroy($id);
+        $deleted = DB::table('ab_shoppingcart_item')
+            ->where('ab_shoppingcart_id', $shoppingcartid)
+            ->where('ab_article_id', $articleId)
+            ->delete();
 
         if ($deleted) {
             return response()->json(['success' => true]);
         } else {
-            return response()->json(['error' => 'Artikel nicht gefunden'], 400);
+            return response()->json(['error' => 'Artikel nicht im Warenkorb gefunden'], 404);
         }
-
     } catch (\Exception $e) {
         return response()->json(['error' => $e->getMessage()], 500);
     }
 });
 
-Route::post("/warenkorb/articles", function(Request $request){
+Route::post("/shoppingcart", function(Request $request) {
 
-    $user_id = $request->input("id");
+    //return response()->json($request->all());
 
+    $user_name = $request->post("ab_name");
+    $article_name = $request->post("article_name"); //
 
+    if(!$article_name){
+        return response()->json(['error' => '$article_name nicht gefunden'], 404);
+    }
+    if(!$user_name){
+        return response()->json(['error' => '$user_name nicht gefunden'], 404);
+    }
     try {
-        $warenkorb = warenkorb::query()->insert([
+        // Hole die ID des Users
+        $user_id = DB::table("ab_user")
+            ->where('ab_name', $user_name)
+            ->value("id");
 
+        if (!$user_id) {
+            return response()->json(['error' => 'User nicht gefunden'], 404);
+        }
+
+        // Hole die ID des Artikels
+        $article_id = DB::table("ab_article")
+            ->where("ab_name", $article_name)
+            ->value("id");
+
+        if (!$article_id) {
+            return response()->json(['error' => 'Artikel nicht gefunden'], 404);
+        }
+
+        // Hole den Warenkorb des Users, falls vorhanden
+        $warenkorb_id = DB::table("ab_shoppingcart")
+            ->where("ab_creator_id", $user_id)
+            ->value("id");
+
+        // Wenn kein Warenkorb existiert, erstelle einen
+        if (!$warenkorb_id) {
+            $warenkorb_id = DB::table("ab_shoppingcart")->insertGetId([
+                "ab_creator_id" => $user_id,
+                "created_at" => now(),
+                "updated_at" => now()
+            ]);
+        }
+
+        // Füge den Artikel in den Warenkorb ein
+        DB::table("ab_shoppingcart_item")->insert([
+            "ab_shoppingcart_id" => $warenkorb_id,
+            "ab_article_id" => $article_id,
+            "created_at" => now(),
+            "updated_at" => now()
         ]);
-    }
-    catch (\PHPUnit\Exception){
 
+        return response()->json(['success' => true]);
+
+    } catch (Exception $e) {
+        return response()->json(['error' => $e->getMessage()], 500);
     }
+});
+
+
+Route::get("shoppingcart", function(Request $request) {
+
+    $user_name = $request->input("ab_name");
+    $user_id = DB::table("ab_user")->where("ab_name", $user_name)->value("id");
+
+$articles = DB::table('ab_user as u')
+    ->join('ab_shoppingcart as sc', 'sc.ab_creator_id', '=', 'u.id')
+    ->join('ab_shoppingcart_item as sci', 'sci.ab_shoppingcart_id', '=', 'sc.id')
+    ->join('ab_article as a', 'a.id', '=', 'sci.ab_article_id')
+    ->where('u.id', $user_id)
+    ->select('a.*', 'sci.created_at as hinzugefügt_am')
+    ->get();
+
+   return response()->json($articles);
 
 });

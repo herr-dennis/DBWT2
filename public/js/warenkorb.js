@@ -57,11 +57,87 @@ function proofDuplicates(InsertItem) {
 function addEventListenerByLi(liItem, articleName) {
     const row = document.getElementById('row-' + articleName);
 
+
+    //Prüft ob User eingeloggt und holt ein Warenkorb
+    getStateLoggedIn()
+        .then(response => {
+            console.log("Erfolgreich eingeloggt:", response);
+            let user = response.user;
+            let loggedIn = response.auth_;
+
+            if (user && loggedIn === "true") {
+                storeArtikelInDB(articleName ,user)
+                    .then(response => {
+                        console.log("Artikel erfolgreich gespeichert:", response);
+                    })
+                    .catch(error => {
+                        console.error("Fehler beim Speichern des Artikels:", error.error);
+                    });
+            }
+
+        })
+        .catch(error => {
+            console.error("Fehler beim Abrufen des Login-Status:", error);
+        });
+
+
+
+    //Speichert den Artikel in der Datenbank /Warenkorb
+
+
     liItem.addEventListener("click", () => {
         if (row.style.display === 'none') {
             row.style.display = '';
             liItem.remove();  // Entfernt das LI aus der UL
         }
+    });
+}
+
+
+
+function getWarenkorbByUser(){
+
+}
+
+//Promise um Callback-Hell zu vermeiden!
+
+function getStateLoggedIn(){
+    return new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open("GET", "/isloggedin", true);
+        xhr.responseType = 'json';
+        xhr.onload = () => {
+            if (xhr.status === 200) resolve(xhr.response);
+            else reject(xhr.statusText);
+        };
+        xhr.onerror = () => reject("Netzwerkfehler");
+        xhr.send();
+    });
+}
+
+function storeArtikelInDB(articleName ,user) {
+    return new Promise((resolve, reject) => {
+        const xhr_waren_post = new XMLHttpRequest();
+        xhr_waren_post.open("POST", "/api/shoppingcart", true);
+        xhr_waren_post.responseType = 'json';
+
+        xhr_waren_post.onload = () => {
+            if (xhr_waren_post.status === 200) {
+                resolve(xhr_waren_post.response); // Erfolg
+            } else {
+                console.log(xhr_waren_post.response);
+                reject(`Fehlerstatus: ${xhr_waren_post.response}`); // Fehlerstatus
+            }
+        };
+
+        xhr_waren_post.onerror = () => {
+            reject("Netzwerkfehler"); // Netzwerkfehler
+        };
+        xhr_waren_post.setRequestHeader('Content-Type', 'application/json');
+        xhr_waren_post.send(JSON.stringify({
+            ab_name: user,
+            article_name: articleName
+        }));
     });
 }
 

@@ -1,4 +1,6 @@
 <?php
+
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::get('TestData', function () {
@@ -13,10 +15,10 @@ Route::get("/", function (){
 });
 
 
-Route::get('articles', function (\Illuminate\Http\Request $request) {
+Route::get('articles', function (Request $request) {
     return app()->make('\App\Http\Controllers\MainController')->getArticles($request);
 });
-Route::Post('articles', function (\Illuminate\Http\Request $request) {
+Route::Post('articles', function (Request $request) {
     return app()->make('\App\Http\Controllers\MainController')->insertArticle($request);
 });
 
