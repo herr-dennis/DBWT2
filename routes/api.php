@@ -68,14 +68,13 @@ Route::post('/articles', function (Request $request) {
 Route::delete('/shoppingcart/{shoppingcartid}/articles/{articleId}', function ($shoppingcartid, $articleId) {
     try {
         $deleted = DB::table('ab_shoppingcart_item')
-            ->where('ab_shoppingcart_id', $shoppingcartid)
             ->where('ab_article_id', $articleId)
             ->delete();
 
         if ($deleted) {
             return response()->json(['success' => true]);
         } else {
-            return response()->json(['error' => 'Artikel nicht im Warenkorb gefunden'], 404);
+            return response()->json(['error' => $deleted], 404);
         }
     } catch (\Exception $e) {
         return response()->json(['error' => $e->getMessage()], 500);
@@ -154,7 +153,7 @@ $articles = DB::table('ab_user as u')
     ->join('ab_shoppingcart_item as sci', 'sci.ab_shoppingcart_id', '=', 'sc.id')
     ->join('ab_article as a', 'a.id', '=', 'sci.ab_article_id')
     ->where('u.id', $user_id)
-    ->select('a.*', 'sci.created_at as hinzugefügt_am')
+    ->select('a.*', 'sci.created_at as hinzugefügt_am' , 'sc.id', 'sci.ab_article_id' )
     ->get();
 
    return response()->json($articles);
