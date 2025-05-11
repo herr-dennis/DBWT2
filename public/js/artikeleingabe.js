@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function() {
     priceInput.addEventListener("change", function(event) {
         let price = event.target.value;
 
-        if(price <0){
+        if(price < 0){
             alert("Preis nicht akzeptiert!")
             submit.disabled=true;
         }else{
@@ -72,7 +72,7 @@ document.addEventListener('DOMContentLoaded', function() {
             priceInput.classList = "alert";
             valid = false;
         }
-
+        console.log(form)
         if(valid) {
             // Wenn alle Felder ok sind
             form.submit();  // Formular absenden
