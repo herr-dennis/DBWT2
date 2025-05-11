@@ -11,7 +11,7 @@
         <button class="btn" id="fetchBtn" >Los! Ich will die Daten</button>
         <button class="btn" id="clearBtn" > Reset </button>
         <button class="btn" id="updateBtn" >Update 3sec</button>
-        <button class="btn" id="stopBtn" >Stoppe Update</button>
+        <button class="btn" id="stopBtn" >Stoppe Update (3sec)</button>
     </div>
 
 
