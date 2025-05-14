@@ -8,8 +8,6 @@
 @endsection
 
 @section("main-content")
-    <script src="{{ asset('js/artikeleingabe.js') }}"></script>
-
 
 
 @endsection

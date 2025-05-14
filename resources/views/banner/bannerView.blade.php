@@ -12,4 +12,3 @@
 
 </div>
 
-<script src="{{ asset('js/cookieCheck.js') }}"></script>

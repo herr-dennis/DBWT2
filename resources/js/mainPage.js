@@ -1,4 +1,7 @@
-document.addEventListener("DOMContentLoaded", () => {
+
+
+
+export function mainPageJs() {
 
     const adminBtn = document.getElementById("adminBtn");
 
@@ -6,4 +9,5 @@ document.addEventListener("DOMContentLoaded", () => {
         window.location.href="/articles";
     })
 
-})
+
+}

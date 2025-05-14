@@ -1,4 +1,7 @@
-document.addEventListener('DOMContentLoaded', function() {
+
+
+export function artikeleingabe() {
+
     const form = document.createElement("form");
     const input = document.createElement("input");
     const submit = document.createElement("input", );
@@ -158,6 +161,4 @@ document.addEventListener('DOMContentLoaded', function() {
 
     }
 
-
-
-});
+}

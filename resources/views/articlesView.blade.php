@@ -12,8 +12,6 @@
         <p style="color: red">{{\Illuminate\Support\Facades\Session::get("msg")}}</p>
     @endif
 
-
-    <script src="{{asset("js/warenkorb.js")}}" ></script>
     <table class="table" border="1">
         <thead>
         <tr>

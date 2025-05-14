@@ -11,7 +11,7 @@ class FactorySeeder extends Seeder
 {
 
     public function run(){
-        $this->userData();
+       // $this->userData();
     }
 
     public function userData(){

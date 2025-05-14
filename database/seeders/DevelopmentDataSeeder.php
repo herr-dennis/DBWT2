@@ -16,8 +16,9 @@ class DevelopmentDataSeeder extends Seeder
     public function run()
     {
         //  $this->seedUsers();
-       $this->seedArticles();
-        $this->seedArticleCategories();
+       //$this->seedArticles();
+        //$this->seedArticleCategories();
+
     }
 
     /**

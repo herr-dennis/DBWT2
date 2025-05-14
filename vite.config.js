@@ -10,4 +10,10 @@ export default defineConfig({
         }),
         tailwindcss(),
     ],
+    build: {
+        sourcemap: true, // Stelle sicher, dass Source Maps generiert werden
+    },
 });
+
+
+

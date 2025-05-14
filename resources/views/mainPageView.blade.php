@@ -1,7 +1,7 @@
 @extends("layouts.defaultLayout")
 @section("title", "Home")
 @section("main-content")
-    <script src="{{asset("/js/mainPage.js")}}"></script>
+
 <h1 class="h1Tag" >Abalo</h1>
 
 

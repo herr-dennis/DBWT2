@@ -1,11 +1,17 @@
-document.addEventListener("DOMContentLoaded", () => {
+import {im} from "mathjs";
 
-    let loading = true;
+
+let loading = true;
     let stopUpdate = false;
     const btn = document.getElementById("fetchBtn");
     const resetBtn= document.getElementById("clearBtn");
     const updateBtn = document.getElementById("updateBtn");
     const stopUpdateBtn = document.getElementById("stopBtn");
+     let its  = 1;
+    import {abs , add}  from "mathjs";
+
+
+export function  ajax(){
 
     stopUpdateBtn.addEventListener("click", function() {
         stopUpdate = true;
@@ -42,7 +48,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 ladeBalken();
                 if(xhr.status === 200){
                     const text = document.getElementById("msg");
-                    text.innerText = "Status:"+xhr.statusText+" Nachricht: "+ xhr.responseText;
+                    text.innerText = "Status:"+xhr.statusText+" Nachricht: "+ xhr.responseText+"Its: "+its;
                     loading = false;
 
                 }else{
@@ -77,7 +83,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             //repeat eine JS-Funktion, die einfach den String x-mal wiederholt
-            msgElement.textContent = "Load" + ".".repeat((n % 3) + 1);
+            msgElement.textContent = "Load" + ".".repeat(abs(n % 3) +1);
             n++;
         }, 500); // alle 0,5 Sekunden ein Punkt mehr
     }
@@ -103,6 +109,8 @@ document.addEventListener("DOMContentLoaded", () => {
         let baseUlr =  location.protocol +"//"+ location.host;
         console.log(baseUlr);
         xhr_.open("GET", baseUlr + "/updateJson");
+
+        its = add(its,1);
 
         //Statement der Anfrage aufbauen.
         xhr_.onreadystatechange = function () {
@@ -142,5 +150,6 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     ladeBalken();
-});
 
+
+    }
