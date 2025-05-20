@@ -45,3 +45,8 @@ Route::get('3-ajax2-periodic' , function(){
 Route::get('updateJson' , function(){
     return app()->make('\App\Http\Controllers\UpdateJsonController')-> updateJson();
 });
+
+
+Route::get("M4_Vue" , function (){
+    return view("Aufgaben.4-vue1-helloworld");
+});

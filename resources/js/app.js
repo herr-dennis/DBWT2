@@ -8,5 +8,6 @@ import './data.js';
 import './mainPage.js';
 import './navObject.js';
 import './route.js';
+import './Aufgaben/4-vue1-helloworld.js';
 
 
