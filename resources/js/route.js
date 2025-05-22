@@ -1,3 +1,5 @@
+import {createApp} from "vue";
+
 const route = window.location.pathname.replace(/\/$/, '');
 
 console.log("route", route);
@@ -8,6 +10,10 @@ import { artikeleingabe } from "./artikeleingabe.js";
 import { mainPageJs } from "./mainPage.js";
 import { createAppM4_Vue_1 } from "./Aufgaben/4-vue1-helloworld.js";
 import { createNav } from "./navObject.js";
+import ArtikelListe from './artikelSuche.vue';
+
+
+
 
 // Seiten ohne Navigation
 const excludedRoutes = ['/M4_Vue', '/login', '/register'];
@@ -18,6 +24,9 @@ if (!excludedRoutes.includes(route)) {
 //Meta-Instanz zum laden verschiedener JS-Funktionen.
 document.addEventListener('DOMContentLoaded', () => {
     if (route.startsWith('/articles')) {
+        const app = createApp(ArtikelListe);
+        app.mount('#app');
+        //Warenkorb
         initialize();
     }
 

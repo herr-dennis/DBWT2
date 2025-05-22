@@ -1,7 +1,5 @@
 <?php
 use App\Models\ab_articles;
-use App\Models\Ab_User;
-use App\Models\warenkorb;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
@@ -12,24 +10,22 @@ Route::get('/user', function (Request $request) {
 
 
 Route::get('/articles', function (Request $request) {
-
     $search = $request->input('search');
     $data = ab_articles::query();
 
-    //echo $search -> Hat so einen Json Fehler geführt!?
-
     if ($search) {
-        $data->select("ab_name","id")->where('ab_name', 'like', '%' . $search . '%');
-    }
-    else{
-        $data->select("ab_name","id");
+        $search = strtolower($search);
+
+        $data->select("*")
+            //whereRaw nativ SQL
+            ->whereRaw('LOWER(ab_name) LIKE ?', ['%' . $search . '%']);
+    } else {
+        $data->select("*");
     }
 
     $articles = $data->get();
-    $jsonData = json_encode($articles);
 
-    return response()->json($jsonData);
-
+    return response()->json($articles);
 });
 
 

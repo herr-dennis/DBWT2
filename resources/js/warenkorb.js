@@ -9,306 +9,312 @@ let userInformation = null;
 
  export function initialize() {
 
-        //Erstellt die nötigen Elemente
-        const warenkorbLabel = document.createElement("div")
-        warenkorbLabel.classList.add('warenkorb-div')
-        warenkorbLabel.textContent = "Warenkorb";
+
+         //Erstellt die nötigen Elemente
+         const warenkorbLabel = document.createElement("div")
+         warenkorbLabel.classList.add('warenkorb-div')
+         warenkorbLabel.textContent = "Warenkorb";
 
 
-        warenkorb.classList.add("warenkorb");
-        warenkorb.id = "warenkorbID";
-        // "Hängt das Warenkorb Label an das Warenkorbmenü
-        warenkorb.appendChild(warenkorbLabel);
+         warenkorb.classList.add("warenkorb");
+         warenkorb.id = "warenkorbID";
+         // "Hängt das Warenkorb Label an das Warenkorbmenü
+         warenkorb.appendChild(warenkorbLabel);
 
-        // Choice ist ein Container mit dem Input der Artikelinformationen, die in der View erzeugt wurde
-        let divs = document.getElementsByClassName('choice');
+         // Choice ist ein Container mit dem Input der Artikelinformationen, die in der View erzeugt wurde
+         document.querySelector('tbody').addEventListener('click', (event) => {
+             const choiceDiv = event.target.closest('.choice');
+             if (!choiceDiv) return; // Kein relevanter Klick
 
-        //Laufen über alle Choice-Container, dort befindet sich ein hidden-input Feld drin, mit den Daten
-        for (let i = 0; i < divs.length; i++) {
+             const hiddenInput = choiceDiv.querySelector('input[type="hidden"]');
+             if (!hiddenInput) return;
 
-            //Zu jeden Choice-Container wird ein EventListener eingefügt
-            divs[i].addEventListener('click', (e) => {
+             const artikelName = hiddenInput.value;
 
-                // Holt den Aktuellen Choice-Container
-                const hiddenInput = divs[i].querySelector('input[name="id"]');
+             if (proofDuplicates(artikelName)) {
+                 hideArtikel(artikelName);
 
-                //Prüft auf Dups..
-                if (proofDuplicates(hiddenInput.value)) {
-                    hideArtikel(hiddenInput.value);
-                    const insertWarenkorb = document.createElement('li');
+                 const insertWarenkorb = document.createElement('li');
+                 addEventListenerByLi(insertWarenkorb, artikelName);
 
-                    //Logik für das Entfernen des Artikels aus dem Warenkorb
-                    addEventListenerByLi(insertWarenkorb, hiddenInput.value);
-                    const label = document.createElement('label');
-                    label.textContent = hiddenInput.value;
-                    insertWarenkorb.appendChild(label);
-                    warenkorb.appendChild(insertWarenkorb);
-                }
-            });
-        }
-
-        document.body.appendChild(warenkorb);  //hänge den Warenkorb ans Ende des Bodys
-        loadWarenkorb();
+                 const label = document.createElement('label');
+                 label.textContent = artikelName;
+                 insertWarenkorb.appendChild(label);
+                 warenkorb.appendChild(insertWarenkorb);
+             }
+         });
 
 
-    function proofDuplicates(InsertItem) {
-        const warenkorb = document.getElementById("warenkorbID");
-
-        for (let i = 0; i < warenkorb.children.length; i++) {
-            if (warenkorb.children[i].textContent === InsertItem) {
-                return false; // Schon vorhanden!
-            }
-        }
-        return true; // Noch nicht drin!
-    }
-
-    function addEventListenerByLi(liItem, articleName) {
-        const row = document.getElementById('row-' + articleName);
-
-        //Prüft ob User eingeloggt und holt ein Warenkorb
-        getStateLoggedIn()
-            .then(response => {
-                console.log("Erfolgreich eingeloggt:", response);
-                user = response.user;
-                let loggedIn = response.auth_;
-
-                if (user && loggedIn === "true") {
-                    storeArtikelInDB(articleName, user)
-                        .then(response => {
-                            console.log("Artikel erfolgreich gespeichert:", response);
-                        })
-                        .catch(error => {
-                            console.error("Fehler beim Speichern des Artikels:", error.error);
-                        });
-                }
-
-            })
-            .catch(error => {
-                console.error("Fehler beim Abrufen des Login-Status:", error);
-            });
+         document.body.appendChild(warenkorb);  //hänge den Warenkorb ans Ende des Bodys
+         loadWarenkorb();
 
 
-        liItem.addEventListener("click", () => {
-            if (row.style.display === 'none') {
-                deleteItemNotLoadedItemsShoppingcart(articleName).then((response) => {
-                    console.log("Artikel erfolgreich gespeichert:", response);
-                }).catch(error => {
-                    console.log(error);
-                })
-                row.style.display = '';
-                liItem.remove();  // Entfernt das LI aus der UL
-            }
-        });
-    }
+         function proofDuplicates(InsertItem) {
+             const warenkorb = document.getElementById("warenkorbID");
 
-    function bindLiForDisplayOnly(liItem, articleName) {
-        const row_ = document.getElementById('row-' + articleName);
-        //Speichert den Artikel in der Datenbank /Warenkorb
-        liItem.addEventListener("click", () => {
-            if (row_.style.display === 'none') {
-                row_.style.display = '';
-                deleteItem(articleName).then(response => {
-                    console.log(response.message);
-                }).catch(error => {
-                    console.log(error);
-                })
-                liItem.remove();  // Entfernt das LI aus der UL
-            }
-        });
-    }
+             for (let i = 0; i < warenkorb.children.length; i++) {
+                 if (warenkorb.children[i].textContent === InsertItem) {
+                     return false; // Schon vorhanden!
+                 }
+             }
+             return true; // Noch nicht drin!
+         }
 
+         function addEventListenerByLi(liItem, articleName) {
+             const row = document.getElementById('row-' + articleName);
 
-    function loadWarenkorb() {
-        getStateLoggedIn()
-            .then(response => {
-                user = response.user;
-                userInformation = response;
-                getArtikelAndShoppingcartByUser(user)
-                    .then(response => {
-                        items = response;
-                        shoppingID = items[0].id;
-                        if (!items || !items.length) {
-                            console.log("Warenkorb ist leer.");
-                            return;
-                        }
+             //Prüft ob User eingeloggt und holt ein Warenkorb
+             getStateLoggedIn()
+                 .then(response => {
+                     console.log("Erfolgreich eingeloggt:", response);
+                     user = response.user;
+                     let loggedIn = response.auth_;
 
-                        const parent = document.getElementById("warenkorbID");
+                     if (user && loggedIn === "true") {
+                         storeArtikelInDB(articleName, user)
+                             .then(response => {
+                                 console.log("Artikel erfolgreich gespeichert:", response);
+                             })
+                             .catch(error => {
+                                 console.error("Fehler beim Speichern des Artikels:", error.error);
+                             });
+                     }
 
-                        for (let i = 0; i < items.length; i++) {
-
-                            if (proofDuplicates(items[i].ab_name)) {
-                                hideArtikel(items[i].ab_name);
-                                const liElement = document.createElement("li");
-                                bindLiForDisplayOnly(liElement, items[i].ab_name);
-                                liElement.id = "loadedItemID_" + items[i].id;
-                                const label = document.createElement("label");
-                                label.textContent = items[i].ab_name; //
-
-                                liElement.appendChild(label);
-                                parent.appendChild(liElement);
-                            }
-                        }
-
-                        // warenkorb.appendChild(parent);
-                    })
-                    .catch(error => {
-                        console.error("Fehler beim Abrufen der Artikel:", error);
-                    });
-            })
-            .catch(error => {
-                console.error("Fehler beim Abrufen des Login-Status:", error);
-            });
-    }
+                 })
+                 .catch(error => {
+                     console.error("Fehler beim Abrufen des Login-Status:", error);
+                 });
 
 
-    function getArtikelAndShoppingcartByUser() {
+             liItem.addEventListener("click", () => {
+                 if (row.style.display === 'none') {
+                     deleteItemNotLoadedItemsShoppingcart(articleName).then((response) => {
+                         console.log("Artikel erfolgreich gespeichert:", response);
+                     }).catch(error => {
+                         console.log(error);
+                     })
+                     row.style.display = '';
+                     liItem.remove();  // Entfernt das LI aus der UL
+                 }
+             });
+         }
 
-        return new Promise((resolve, reject) => {
-            const xhr_get = new XMLHttpRequest();
-            xhr_get.open("GET", "/api/shoppingcart?ab_name=" + user);
-            xhr_get.setRequestHeader('Content-Type', 'application/json');
+         function bindLiForDisplayOnly(liItem, articleName) {
 
-            xhr_get.onload = (() => {
-                if (xhr_get.status === 200) {
-                    resolve(xhr_get.response);
-                    console.log(xhr_get.response)
-                } else {
-                    reject(xhr_get.statusText);
-                }
-            });
+             document.querySelector('#warenkorbID').addEventListener('click', (event) => {
+                 const liItem = event.target.closest('li');
+                 if (!liItem) return;
 
-            xhr_get.onerror = (() => {
-                reject("Netzwerkfehler");
-            });
+                 const row_ = document.getElementById('row-' + articleName);
+                 if (!row_) return;
 
-            xhr_get.responseType = "json";
-            xhr_get.send();
+                 if (row_.style.display === 'none') {
+                     row_.style.display = '';
+
+                     deleteItem(articleName).then(response => {
+                         console.log(response.message);
+                     }).catch(error => {
+                         console.log(error);
+                     });
+
+                     liItem.remove(); // Entfernt das LI aus der UL
+                 }
+             });
+
+         }
 
 
-        })
+         function loadWarenkorb() {
+             getStateLoggedIn()
+                 .then(response => {
+                     user = response.user;
+                     userInformation = response;
+                     getArtikelAndShoppingcartByUser(user)
+                         .then(response => {
+                             items = response;
+                             shoppingID = items[0].id;
+                             if (!items || !items.length) {
+                                 console.log("Warenkorb ist leer.");
+                                 return;
+                             }
 
-    }
+                             const parent = document.getElementById("warenkorbID");
 
-    function getStateLoggedIn() {
-        //Promise Objekt, um Callback-Hell zu verhindern.
-        return new Promise((resolve, reject) => {
-            const xhr = new XMLHttpRequest();
-            xhr.open("GET", "/isloggedin", true);
-            xhr.responseType = 'json';
-            xhr.onload = () => {
-                if (xhr.status === 200) {
-                    resolve(xhr.response)
-                } else reject(xhr.statusText);
-            };
-            xhr.onerror = () => reject("Netzwerkfehler");
-            xhr.send();
-        });
-    }
+                             for (let i = 0; i < items.length; i++) {
 
-    function storeArtikelInDB(articleName, user) {
-        //Promise Objekt, um Callback-Hell zu verhindern.
-        return new Promise((resolve, reject) => {
-            const xhr_waren_post = new XMLHttpRequest();
-            xhr_waren_post.open("POST", "/api/shoppingcart", true);
-            xhr_waren_post.responseType = 'json';
+                                 if (proofDuplicates(items[i].ab_name)) {
+                                     hideArtikel(items[i].ab_name);
+                                     const liElement = document.createElement("li");
+                                     bindLiForDisplayOnly(liElement, items[i].ab_name);
+                                     liElement.id = "loadedItemID_" + items[i].id;
+                                     const label = document.createElement("label");
+                                     label.textContent = items[i].ab_name; //
 
-            xhr_waren_post.onload = () => {
-                if (xhr_waren_post.status === 200) {
-                    resolve(xhr_waren_post.response); // Erfolg
-                } else {
-                    console.log(xhr_waren_post.response);
-                    reject(`Fehlerstatus: ${xhr_waren_post.response}`); // Fehlerstatus
-                }
-            };
+                                     liElement.appendChild(label);
+                                     parent.appendChild(liElement);
+                                 }
+                             }
 
-            xhr_waren_post.onerror = () => {
-                reject("Netzwerkfehler"); // Netzwerkfehler
-            };
-            xhr_waren_post.setRequestHeader('Content-Type', 'application/json');
-            xhr_waren_post.send(JSON.stringify({
-                ab_name: user,
-                article_name: articleName
-            }));
-        });
-    }
+                             // warenkorb.appendChild(parent);
+                         })
+                         .catch(error => {
+                             console.error("Fehler beim Abrufen der Artikel:", error);
+                         });
+                 })
+                 .catch(error => {
+                     console.error("Fehler beim Abrufen des Login-Status:", error);
+                 });
+         }
+
+
+         function getArtikelAndShoppingcartByUser() {
+
+             return new Promise((resolve, reject) => {
+                 const xhr_get = new XMLHttpRequest();
+                 xhr_get.open("GET", "/api/shoppingcart?ab_name=" + user);
+                 xhr_get.setRequestHeader('Content-Type', 'application/json');
+
+                 xhr_get.onload = (() => {
+                     if (xhr_get.status === 200) {
+                         resolve(xhr_get.response);
+                         console.log(xhr_get.response)
+                     } else {
+                         reject(xhr_get.statusText);
+                     }
+                 });
+
+                 xhr_get.onerror = (() => {
+                     reject("Netzwerkfehler");
+                 });
+
+                 xhr_get.responseType = "json";
+                 xhr_get.send();
+
+
+             })
+
+         }
+
+         function getStateLoggedIn() {
+             //Promise Objekt, um Callback-Hell zu verhindern.
+             return new Promise((resolve, reject) => {
+                 const xhr = new XMLHttpRequest();
+                 xhr.open("GET", "/isloggedin", true);
+                 xhr.responseType = 'json';
+                 xhr.onload = () => {
+                     if (xhr.status === 200) {
+                         resolve(xhr.response)
+                     } else reject(xhr.statusText);
+                 };
+                 xhr.onerror = () => reject("Netzwerkfehler");
+                 xhr.send();
+             });
+         }
+
+         function storeArtikelInDB(articleName, user) {
+             //Promise Objekt, um Callback-Hell zu verhindern.
+             return new Promise((resolve, reject) => {
+                 const xhr_waren_post = new XMLHttpRequest();
+                 xhr_waren_post.open("POST", "/api/shoppingcart", true);
+                 xhr_waren_post.responseType = 'json';
+
+                 xhr_waren_post.onload = () => {
+                     if (xhr_waren_post.status === 200) {
+                         resolve(xhr_waren_post.response); // Erfolg
+                     } else {
+                         console.log(xhr_waren_post.response);
+                         reject(`Fehlerstatus: ${xhr_waren_post.response}`); // Fehlerstatus
+                     }
+                 };
+
+                 xhr_waren_post.onerror = () => {
+                     reject("Netzwerkfehler"); // Netzwerkfehler
+                 };
+                 xhr_waren_post.setRequestHeader('Content-Type', 'application/json');
+                 xhr_waren_post.send(JSON.stringify({
+                     ab_name: user,
+                     article_name: articleName
+                 }));
+             });
+         }
 
 //Items global, mit allen Daten, was im Warenkorb ist
-    function deleteItem(artikelname) {
-        return new Promise((resolve, reject) => {
-            let item;
-            if (!item) {
-                item = items.find(i => i.ab_name === artikelname);
+         function deleteItem(artikelname) {
+             return new Promise((resolve, reject) => {
+                 let item;
+                 if (!item) {
+                     item = items.find(i => i.ab_name === artikelname);
 
-            } else {
-                return reject("Fehler");
-            }
+                 } else {
+                     return reject("Fehler");
+                 }
 
-            if (!item) {
-                reject("Artikel nicht gefunden.");
-                return;
-            }
+                 if (!item) {
+                     reject("Artikel nicht gefunden.");
+                     return;
+                 }
 
-            const shoppingcartId = item.id;
-            const artikelId = item.ab_article_id;
+                 const shoppingcartId = item.id;
+                 const artikelId = item.ab_article_id;
 
-            const xhr_delete = new XMLHttpRequest();
-            xhr_delete.open("DELETE", `api/shoppingcart/${shoppingcartId}/articles/${artikelId}`, true);
-            xhr_delete.onload = () => {
-                if (xhr_delete.status === 200) {
-                    resolve(xhr_delete.response);
-                } else {
-                    reject(xhr_delete.response);
-                }
-            };
-            xhr_delete.onerror = () => {
-                reject("Netzwerkfehler beim Löschen");
-            };
-            xhr_delete.send();
-        });
-    }
+                 const xhr_delete = new XMLHttpRequest();
+                 xhr_delete.open("DELETE", `api/shoppingcart/${shoppingcartId}/articles/${artikelId}`, true);
+                 xhr_delete.onload = () => {
+                     if (xhr_delete.status === 200) {
+                         resolve(xhr_delete.response);
+                     } else {
+                         reject(xhr_delete.response);
+                     }
+                 };
+                 xhr_delete.onerror = () => {
+                     reject("Netzwerkfehler beim Löschen");
+                 };
+                 xhr_delete.send();
+             });
+         }
 
 
-    function deleteItemNotLoadedItemsShoppingcart(artikelname) {
-        return new Promise((resolve, reject) => {
-            getArtikelAndShoppingcartByUser().then((data) => {
-                const artikel = data.find(i => i.ab_name === artikelname);
-                if (!artikel) {
-                    reject("Artikel nicht gefunden");
-                    return;
-                }
+         function deleteItemNotLoadedItemsShoppingcart(artikelname) {
+             return new Promise((resolve, reject) => {
+                 getArtikelAndShoppingcartByUser().then((data) => {
+                     const artikel = data.find(i => i.ab_name === artikelname);
+                     if (!artikel) {
+                         reject("Artikel nicht gefunden");
+                         return;
+                     }
 
-                const shoppingcartId = artikel.id;
-                const artikelId = artikel.ab_article_id;
+                     const shoppingcartId = artikel.id;
+                     const artikelId = artikel.ab_article_id;
 
-                const xhr_delete = new XMLHttpRequest();
-                xhr_delete.open("DELETE", `api/shoppingcart/${shoppingcartId}/articles/${artikelId}`, true);
-                xhr_delete.responseType = "json"; // ← JSON-Antwort automatisch parsen
+                     const xhr_delete = new XMLHttpRequest();
+                     xhr_delete.open("DELETE", `api/shoppingcart/${shoppingcartId}/articles/${artikelId}`, true);
+                     xhr_delete.responseType = "json"; // ← JSON-Antwort automatisch parsen
 
-                xhr_delete.onload = () => {
-                    if (xhr_delete.status === 200) {
-                        resolve(xhr_delete.response); // ← ist jetzt ein Objekt
-                    } else {
-                        reject(xhr_delete.response);
-                    }
-                };
+                     xhr_delete.onload = () => {
+                         if (xhr_delete.status === 200) {
+                             resolve(xhr_delete.response); // ← ist jetzt ein Objekt
+                         } else {
+                             reject(xhr_delete.response);
+                         }
+                     };
 
-                xhr_delete.onerror = () => {
-                    reject("Netzwerkfehler beim Löschen");
-                };
+                     xhr_delete.onerror = () => {
+                         reject("Netzwerkfehler beim Löschen");
+                     };
 
-                xhr_delete.send();
-            }).catch((error) => {
-                reject("Fehler beim Laden der Artikel: " + error);
-            });
-        });
-    }
+                     xhr_delete.send();
+                 }).catch((error) => {
+                     reject("Fehler beim Laden der Artikel: " + error);
+                 });
+             });
+         }
 
-    function hideArtikel(articleName) {
-        console.log(articleName);
-        const row = document.getElementById('row-' + articleName);
-        if (row) {
-            row.style.display = 'none';
-        }
+         function hideArtikel(articleName) {
+             const row = document.getElementById('row-' + articleName);
+             if (row) {
+                 row.style.display = 'none';
+             }
 
-    }
-}
+         }
+
+ }

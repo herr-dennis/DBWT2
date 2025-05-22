@@ -12,7 +12,13 @@
         <p style="color: red">{{\Illuminate\Support\Facades\Session::get("msg")}}</p>
     @endif
 
-    <table class="table" border="1">
+
+ <div  id="app">
+
+ </div>
+
+
+    {{-- <table class="table" border="1">
         <thead>
         <tr>
             <th>+</th>
@@ -59,6 +65,7 @@
         <label for="searchInput">Artikel suchen:</label>
         <input id="searchInput" type="text" name="search" value="{{ request('search') }}">
         <input type="submit" value="Suchen">
-    </form>
+    </form>--}}
+
 
 @endsection
