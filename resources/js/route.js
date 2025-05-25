@@ -10,7 +10,8 @@ import { artikeleingabe } from "./artikeleingabe.js";
 import { mainPageJs } from "./mainPage.js";
 import { createAppM4_Vue_1 } from "./Aufgaben/4-vue1-helloworld.js";
 import { createNav } from "./navObject.js";
-import ArtikelListe from './artikelSuche.vue';
+import artikelListe from './artikelSuche.vue';
+import artikelEingabe from "./artikelEingabe.vue";
 
 
 
@@ -24,10 +25,15 @@ if (!excludedRoutes.includes(route)) {
 //Meta-Instanz zum laden verschiedener JS-Funktionen.
 document.addEventListener('DOMContentLoaded', () => {
     if (route.startsWith('/articles')) {
-        const app = createApp(ArtikelListe);
+        const app = createApp(artikelListe);
         app.mount('#app');
         //Warenkorb
         initialize();
+    }
+
+    if(route.startsWith('/newarticle')) {
+        const app = createApp(artikelEingabe);
+        app.mount('#app');
     }
 
     if (route.startsWith('/3-ajax1-static')) {
@@ -39,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (route.startsWith('/newarticle')) {
-        artikeleingabe();
+        //artikeleingabe();
     }
 
     if (route === "/") {

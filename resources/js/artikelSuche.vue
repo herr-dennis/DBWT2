@@ -34,9 +34,12 @@
                     <td>{{ artikel['ab_description']}}</td>
                     <td>{{ artikel['created_at']|| "Fehlt" }}</td>
                     <td>{{ artikel['created_at']|| "Fehlt" }}</td>
-                    <td> <img :src="`/images/${artikel.id}.jpg`"
-                             @error="event.target.src = '/images/see-no-evil-3444212_640.jpg'" />
+                    <td>
+                        <img :src="`/images/${artikel.id}.jpg`"
+                             @error="onImgError" />
+
                     </td>
+
 
                 </tr>
             </template>
@@ -88,8 +91,11 @@ export default {
 
                 xhr.send();
             });
-        },
 
+        },
+        onImgError(event) {
+            event.target.src = '/images/see-no-evil-3444212_640.jpg';
+        }
 
     },
    //Reagiert wenn ich searchTerm ändert
