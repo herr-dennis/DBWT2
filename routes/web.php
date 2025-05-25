@@ -1,4 +1,6 @@
 <?php
+
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::get('TestData', function () {
@@ -13,11 +15,11 @@ Route::get("/", function (){
 });
 
 
-Route::get('/articles', function (\Illuminate\Http\Request $request) {
+Route::get('articles', function (Request $request) {
     return app()->make('\App\Http\Controllers\MainController')->getArticles($request);
 });
-Route::Post('articles', function (\Illuminate\Http\Request $request) {
-    return app()->make('\App\Http\Controllers\MainController')->getArticles($request);
+Route::Post('articles', function (Request $request) {
+    return app()->make('\App\Http\Controllers\MainController')->insertArticle($request);
 });
 
 Route::get('getCategories', function () {
@@ -29,4 +31,17 @@ Route::get('newarticle', function () {
 
 Route::get('data' , function(){
     return app()->make('\App\Http\Controllers\MainController')->getData();
+});
+
+
+Route::get('3-ajax1-static' , function(){
+    return view("Aufgaben/3-ajax1-static");
+});
+
+Route::get('3-ajax2-periodic' , function(){
+    return view("Aufgaben/3-ajax2-periodic");
+});
+
+Route::get('updateJson' , function(){
+    return app()->make('\App\Http\Controllers\UpdateJsonController')-> updateJson();
 });

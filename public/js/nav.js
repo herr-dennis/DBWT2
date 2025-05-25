@@ -1,15 +1,19 @@
 document.addEventListener('DOMContentLoaded', () => {
 
+    let categories;
 
-    fetch('/getCategories')
-        .then(response => response.json())
-        .then(data => {
 
-            // Mapping der Kategorien
-            const categories = data.map(cat => ({ title: cat.ab_name }));
+    getKategories(function (response){
+        if (response.error) {
+            console.error("Fehler beim Laden der Kategorien:", response.error);
+        } else {
+            categories = response;
+            console.log("Kategorien erfolgreich geladen:", categories);
+        }
+    });
 
-            // Menüstruktur
-            const menuItems = [
+
+    const menuItems = [
                 { title: 'Home' },
                 {
                     title: 'Kategorien',
@@ -22,7 +26,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         { title: 'Philosophie' },
                         { title: 'Karriere' }
                     ]
-                }
+                },
+                { title: 'Einloggen' }
             ];
 
             // Menü in das DOM einfügen
@@ -35,27 +40,36 @@ document.addEventListener('DOMContentLoaded', () => {
             const menuItem = document.getElementById("menuItem_Unternehmen");
             const menuItemKategorien = document.getElementById('menuItem_Kategorien');
             if(menuItem) {
-                menuItem.addEventListener('click', function(event) {
+                const submenus = document.getElementsByClassName("submenu_Unternehmen");
+                menuItem.addEventListener('mouseenter', function(event) {
                     event.stopPropagation();
-                    const submenus = document.getElementsByClassName("submenu_Unternehmen");
                     for (let submenu of submenus) {
                         submenu.classList.toggle('active');  // Sichtbarkeit umschalten
                     }
                 });
+                menuItem.addEventListener('mouseleave', () => {
+                    for (let submenu of submenus) {
+                        submenu.classList.remove('active');
+                    }
+                });
             }
+
             if(menuItemKategorien) {
-                menuItemKategorien.addEventListener('click', function(event) {
+                const submenus = document.getElementsByClassName("submenu_kategorien");
+                menuItemKategorien.addEventListener('mouseenter', function(event) {
                     event.stopPropagation();  // Verhindert Klickpropagation
-                    const submenus = document.getElementsByClassName("submenu_kategorien");
                     for (let submenu of submenus) {
                         submenu.classList.toggle('active');  // Sichtbarkeit umschalten
                     }
                 });
+                menuItemKategorien.addEventListener('mouseleave', () => {
+                    for (let submenu of submenus) {
+                        submenu.classList.remove('active');
+                    }
+                });
+
             }
 
-
-
-        });
 
     //Bau-Funktion
     function createMenu(items) {
@@ -83,9 +97,29 @@ document.addEventListener('DOMContentLoaded', () => {
                 li.id = 'menuItem_Kategorien';
             }
 
+
             const aTag = document.createElement('a');
             aTag.textContent = item.title;
-            aTag.href = "/";
+            if(item.title === 'Kategorien'){
+                aTag.href = "";
+            }
+            else {
+                aTag.href = "/";
+            }
+            //Logik für der Einloggen, ruft auth() auf für die Überprüfung
+            if(item.title==="Einloggen"){
+                  aTag.addEventListener("click",function (){
+
+                      auth(function(response) {
+                          if (response.error) {
+                              console.error("Fehler beim Login:", response.error);
+                          } else {
+                              console.log("Eingeloggt als:", response.user);
+                          }
+                      });
+
+                  })
+            }
             li.appendChild(aTag);
 
             // Rekursiv: wenn Kinder vorhanden, Submenü erstellen
@@ -113,6 +147,55 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         return container;
+    }
+
+
+    function auth(callback) {
+        const xhr_auth = new XMLHttpRequest();
+        xhr_auth.open("POST", "/login", true);
+        xhr_auth.responseType = 'json';
+        xhr_auth.setRequestHeader("Content-Type", "application/json");
+
+        xhr_auth.onreadystatechange = function () {
+            if (xhr_auth.readyState === 4) {
+                if (xhr_auth.status === 200) {
+                    callback(xhr_auth.response);
+                    createAdminBtn();
+                } else {
+                    callback({ error: xhr_auth.statusText });
+                }
+            }
+        };
+
+        xhr_auth.onerror = function () {
+            callback({ error: "Netzwerkfehler" });
+        };
+
+        xhr_auth.send();
+    }
+
+
+    function getKategories(callback){
+        const xhr_kate = new XMLHttpRequest();
+        xhr_kate.open("GET", "/getCategories", true);
+        xhr_kate.responseType = 'json';
+        xhr_kate.setRequestHeader("Content-Type", "application/json");
+
+        xhr_kate.onreadystatechange = function () {
+            if (xhr_kate.readyState === 4) {
+                if (xhr_kate.status === 200) {
+                    callback(xhr_kate.response);
+                } else {
+                    callback({ error: xhr_kate.statusText });
+                }
+            }
+        };
+
+        xhr_kate.onerror = function () {
+            callback({ error: "Netzwerkfehler" });
+        };
+
+        xhr_kate.send();
     }
 
 });

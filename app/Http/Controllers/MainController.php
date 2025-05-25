@@ -10,47 +10,60 @@ use Illuminate\Support\Facades\Session;
 class MainController extends Controller
 {
 
-    public function getArticles(Request $request){
 
-        //Post von /newarticles
+
+    public function insertArticle(Request $request)
+    {
         if (!empty($request->post())) {
 
             $name = $request->post("name") ?: null;
-            $price = $request->post("price") ?:null;
-            $beschreibung = $request->post("beschreibung") ?:null;
+            $price = $request->post("preis") ?: null;
+            $beschreibung = $request->post("beschreibung") ?: null;
 
-            //Holt die nächste ID aus der Datenbank
             $id = DB::select("SELECT nextval('ab_article_id_seq') as id")[0]->id;
             $id++;
-            if($name != null && $price != null){
-                try{
+
+            if ($name != null && $price != null) {
+                try {
                     ab_articles::query()->insert([
-                        "id" =>$id,
+                        "id" => $id,
                         "ab_name" => $name,
                         "ab_price" => $price,
                         "ab_description" => $beschreibung,
-                        "ab_creator_id" => 1, // den musst du natürlich setzen
+                        "ab_creator_id" => 1,
                         "ab_createdate" => now(),
                         "created_at" => now(),
                         "updated_at" => now()
                     ]);
 
-                    Session::flash("msg", "Der Artikel wurde erfolgreich erstellt");
+                    return response()->json([
+                        'success' => true,
+                        'message' => 'Artikel gespeichert.'
+                    ]);
 
+                } catch (\Exception $exception) {
 
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Fehler beim Speichern.'
+                    ], 500);
                 }
-                catch (\Exception $exception){
-                    //Logger::class->log(3,$exception->getMessage());
-                    Session::flash("error", "Neuer Artikel nicht eingefügt. Schaue in Logs".$exception->getMessage());
-                }
 
-
-            }else{
-                Session::flash("error", "Name oder Preis fehlt");
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Name oder Preis fehlt.'
+                ], 400);
             }
-
         }
+        return response()->json([
+            'success' => false,
+            'message' => 'Keine POST-Daten empfangen.'
+        ], 400);
+    }
 
+
+    public function getArticles(Request $request){
 
         //Wenn ein Artikel gesucht wird
         if($request->has('search')){

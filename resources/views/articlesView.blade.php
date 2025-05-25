@@ -13,7 +13,7 @@
     @endif
 
 
-    <script src="{{asset("js/warenkorb.js")}}" ></script>
+
     <table class="table" border="1">
         <thead>
         <tr>
@@ -63,4 +63,5 @@
         <input type="submit" value="Suchen">
     </form>
 
+    <script src="{{asset("js/warenkorb.js")}}" ></script>
 @endsection

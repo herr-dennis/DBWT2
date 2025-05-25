@@ -13,6 +13,7 @@ class AuthController extends Controller
         return redirect()->route('haslogin');
     }
 
+
     public function logout(Request $request) {
         $request->session()->flush();
         return redirect()->route('haslogin');
@@ -24,9 +25,9 @@ class AuthController extends Controller
             $r["user"] = $request->session()->get('abalo_user');
             $r["time"] = $request->session()->get('abalo_time');
             $r["mail"] = $request->session()->get('abalo_mail');
-            $r["auth"] = "true";
+            $r["auth_"] = "true";
         }
-        else $r["auth"]="false";
+        else $r["auth_"]="false";
         return response()->json($r);
     }
 }

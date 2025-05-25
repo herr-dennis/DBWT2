@@ -23,7 +23,7 @@ class FactorySeeder extends Seeder
                 'id' => $i+8,
                 'ab_name' => $faker->name,
                 'ab_mail' => $faker->email,
-                'ab_password' =>  bcrypt($faker->password()),
+                'ab_password' =>  $faker->password(),
 
             ]);
         }
