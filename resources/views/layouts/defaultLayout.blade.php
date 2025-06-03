@@ -3,7 +3,7 @@
 <html>
 <head>
 
-    @vite(['resources/css/app.css'])
+    @vite(['resources/css/app.scss'])
     @vite(["resources/js/app.js"])
 
     <meta charset="utf-8">
@@ -16,7 +16,16 @@
 </head>
 <body>
 <header>
-    <nav id="navMenu"> </nav>
+        @section("header")
+
+
+        <div id="nav-app">
+           <navi-header></navi-header>
+
+        </div>
+
+        @show
+
 </header>
 
 <main>

@@ -46,6 +46,9 @@ Route::get('updateJson' , function(){
     return app()->make('\App\Http\Controllers\UpdateJsonController')-> updateJson();
 });
 
+Route::get("newsite" , function (){
+    return view("newsiteView");
+});
 
 Route::get("M4_Vue" , function (){
     return view("Aufgaben.4-vue1-helloworld");

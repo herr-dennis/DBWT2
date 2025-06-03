@@ -12,14 +12,25 @@ Route::get('/user', function (Request $request) {
 Route::get('/articles', function (Request $request) {
     $search = $request->input('search');
     $data = ab_articles::query();
+    $limit = null;
 
-    if ($search) {
+    if($search) {
+        if(is_numeric($search)){
+            $limit = $search;
+        }
+    }
+
+    if ($search && $limit===null) {
         $search = strtolower($search);
 
         $data->select("*")
             //whereRaw nativ SQL
             ->whereRaw('LOWER(ab_name) LIKE ?', ['%' . $search . '%']);
-    } else {
+    }
+    elseif ($limit){
+        $data->inRandomOrder($limit)->limit($limit);
+    }
+    else {
         $data->select("*");
     }
 

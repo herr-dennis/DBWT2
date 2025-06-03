@@ -6,8 +6,6 @@
             <p>Du suchst nach: {{ searchTerm }}</p>
         </form>
 
-
-
         <table class="table" border="1">
             <thead>
             <tr>

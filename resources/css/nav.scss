@@ -1,0 +1,96 @@
+// Farbvariablen
+$defaultColor: #4a5568;
+$accentColor: #00ffd5;
+
+$defaultColor-lightest: lighten($defaultColor, 30%);
+$defaultColor-lighter: lighten($defaultColor, 15%);
+$defaultColor-darker: darken($defaultColor, 15%);
+$defaultColor-darkest: darken($defaultColor, 30%);
+
+#nav-app {
+    width: 80%;
+    margin: 0 auto;
+}
+
+.nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(90deg, $defaultColor, $defaultColor-darker);
+    padding: 1rem;
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(0, 255, 213, 0.2);
+    font-family: 'Orbitron', sans-serif;
+
+    .nav__list {
+        list-style: none;
+        display: flex;
+        gap: 1rem;
+        padding: 0;
+        margin: 0;
+
+        .nav__item {
+            position: relative;
+            padding: 0.5rem 1rem;
+            background: $defaultColor-lighter;
+            border-radius: 10px;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 5px 15px rgba(0, 255, 213, 0.1);
+
+            &:hover {
+                background: $accentColor;
+                color: black;
+                transform: translateY(-4px) scale(1.05);
+                box-shadow: 0 0 15px $accentColor;
+            }
+
+            .nav__link {
+                color: white;
+                text-decoration: none;
+                font-weight: bold;
+                cursor: pointer;
+                display: inline-block;
+                transition: color 0.2s ease-in-out;
+
+                &:hover {
+                    color: black;
+                }
+            }
+
+            .nav__submenu {
+                position: absolute;
+                top: 100%;
+                left: 0;
+                background: black;
+                padding: 0.5rem 0;
+                border-radius: 8px;
+                box-shadow: 0 0 10px $accentColor;
+                display: none;
+                flex-direction: column;
+                z-index: 10;
+                min-width: 180px;
+
+                .nav__submenu-item {
+                    padding: 0.4rem 1rem;
+
+                    .nav__submenu-link {
+                        color: $accentColor;
+                        text-decoration: none;
+                        display: block;
+
+                        &:hover {
+                            color: white;
+                            background: $defaultColor-darker;
+                            border-radius: 6px;
+                        }
+                    }
+                }
+            }
+
+            // Zeige Submenu bei Hover
+            &:hover .nav__submenu {
+                display: flex;
+            }
+        }
+    }
+}
