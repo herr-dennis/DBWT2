@@ -4,6 +4,10 @@
     <template v-if="currentComponent === 'startseite'">
         <!-- STARTSEITE-INHALT -->
 
+
+
+        <h1 class="defaultH2" >Abalo</h1>
+
     <div class="topcase">
         <p class="topcase__p">Neueste Artikel:</p>
         <div class="topcase__content">
@@ -19,17 +23,31 @@
             <p  class="textcontainer__p">Lorem ipsum dolor sit amet, consectetuer adipiscing
                 elit. Aenean commodo ligula eget dolor. Aenean massa
                 <strong>strong</strong>. Cum sociis natoque penatibus
-                et magnis dis parturient montes, nascetur ridiculus
+                et magnis dis parturient montes, nascetur ridiculus<br>
                 mus. Donec quam felis, ultricies nec, pellentesque
-                eu, pretium quis, sem. Nulla consequat massa quis
-                enim. Donec pede justo, fringilla vel, aliquet nec,
+                eu, pretium quis, sem. Nulla consequat massa quis<br>
+                enim. Donec pede justo, fringilla vel, aliquet nec,<br>
                 vulputate eget, arcu. In enim justo, rhoncus ut,
                 imperdiet a, venenatis vitae, justo. Nullam dictum
                 felis eu pede <a class="external ext" href="#">link</a>
                 mollis pretium. Integer tincidunt. Cras dapibus.
                 Vivamus elementum semper nisi. Aenean vulputate
                 eleifend tellus. Aenean leo ligula, porttitor eu,
-                consequat vitae, eleifend ac, enim. Aliquam lorem ante,
+                consequat vitae, eleifend ac, enim. Aliquam lorem ante, <br>
+                dapibus in, viverra quis, feugiat a, tellus. Phasellus
+                viverra nulla ut metus varius laoreet. Quisque rutrum.
+                Aenean imperdiet. Etiam ultricies nisi vel augue.
+                et magnis dis parturient montes, nascetur ridiculus
+                mus. Donec quam felis, ultricies nec, pellentesque<br>
+                eu, pretium quis, sem. Nulla consequat massa quis
+                enim. Donec pede justo, fringilla vel, aliquet nec,<br><br>
+                vulputate eget, arcu. In enim justo, rhoncus ut,
+                imperdiet a, venenatis vitae, justo. Nullam dictum
+                felis eu pede <a class="external ext" href="#">link</a>
+                mollis pretium. Integer tincidunt. Cras dapibus.
+                Vivamus elementum semper nisi. Aenean vulputate
+                eleifend tellus. Aenean leo ligula, porttitor eu,
+                consequat vitae, eleifend ac, enim. Aliquam lorem ante,<br><br>
                 dapibus in, viverra quis, feugiat a, tellus. Phasellus
                 viverra nulla ut metus varius laoreet. Quisque rutrum.
                 Aenean imperdiet. Etiam ultricies nisi vel augue.
@@ -39,6 +57,9 @@
                 elit</h1>
         </div>
     </div>
+
+          <calendar-box></calendar-box>
+
 </template>
     <!-- :is="XX" rendert die Componente die drin steht. -->
         <component v-else :is="currentComponent" />
@@ -49,11 +70,15 @@
 import { fetchArtikel } from "../fetchArtikel.js";
 import Impressum from './impressum.vue';
 import ArtikelSuche from "../artikelSuche.vue";
+import CalendarBox from './calender.vue';
+
+
 
 export default {
     components: {
         impressum: Impressum,
         artikelsuche: ArtikelSuche,
+        calendarBox: CalendarBox,
     },
 
     data() {
@@ -110,7 +135,17 @@ export default {
 
 <style scoped>
 
+.defaultH2{
+    font-weight: bold;
+    font-size: 50px;
+    color: #00ffd5;
+    text-shadow:
+        -1px -1px 0 #000,
+        1px -1px 0 #000,
+        -1px  1px 0 #000,
+        1px  1px 0 #000;
 
+}
 
 .topcase__p {
     text-align: center;

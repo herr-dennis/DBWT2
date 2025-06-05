@@ -1,4 +1,7 @@
 <template>
+
+    <Warenkorb :artikel="warenkorbArtikel" @entferne-artikel="entferneArtikel" />
+
     <div id="app">
         <form class="search-form">
             <label for="searchInput">Artikel suchen:</label>
@@ -18,13 +21,12 @@
                 <th>Bild</th>
             </tr>
             </thead>
-            <tbody>
+            <tbody class="table__content">
             <template v-for="artikel in artikels" :key="artikel.id">
-                <tr :id="'row-'+artikel.ab_name">
+                <tr>
                     <td>
                         <div class="choice">
-                            <input type="hidden" :value="artikel.ab_name" />
-                            <label>+</label>
+                            <label  @click="artikelGeklickt(artikel.ab_name)"  >+</label>
                         </div>
                     </td>
                     <td>{{ artikel.ab_name}}</td>
@@ -38,7 +40,6 @@
 
                     </td>
 
-
                 </tr>
             </template>
             </tbody>
@@ -50,13 +51,18 @@
 <script>
 
 let filterActivate =false;
-
+import Warenkorb from "./VueComponents/warenkorb.vue";
 export default {
+    components:{
+         Warenkorb
+    },
 
     data() {
         return {
+            warenkorbArtikel: [],
             searchTerm: "",
             artikels: [],
+            allData: []
         };
     },
     methods: {
@@ -78,6 +84,9 @@ export default {
                         }
 
                         this.artikels = fristFive || response;
+                        this.allData = response;
+                        this.artikels.sort((a, b) => a.id - b.id);
+                        this.allData.sort((a, b) => a.id - b.id);
                       console.log(response);
                         resolve();
                     } else {
@@ -93,7 +102,22 @@ export default {
         },
         onImgError(event) {
             event.target.src = '/images/see-no-evil-3444212_640.jpg';
-        }
+        },
+        entferneArtikel(id) {
+            this.warenkorbArtikel = this.warenkorbArtikel = this.warenkorbArtikel.filter(a => a !== id);
+            // In allData das passende Objekt finden
+            const artikelObjekt = this.allData.find(a => a.ab_name === id);
+
+            // Zurück zu artikels hinzufügen (wenn nicht schon drin)
+            if (artikelObjekt && !this.artikels.some(a => a.id === artikelObjekt.id)) {
+                this.artikels.push(artikelObjekt);
+                this.artikels.sort((a, b) => a.id - b.id);
+            }
+
+        },
+        artikelGeklickt(artikel) {
+            this.warenkorbArtikel.push(artikel);// oder das ganze Objekt
+        },
 
     },
    //Reagiert wenn ich searchTerm ändert
@@ -104,13 +128,20 @@ export default {
                 this.searchTerm = newSearch;
                 this.fetchArtikels();
             }
-
             if(newSearch===""){
                 filterActivate=false;
                 this.fetchArtikels();
             }
-
         },
+        warenkorbArtikel: {
+            handler(newVal) {
+                this.artikels = this.artikels.filter(a => {
+                    return !newVal.includes(a.ab_name);
+                });
+
+            },
+            deep: true // wichtig, um Änderungen innerhalbdes Arrays zu erkennen
+        }
     },
     //Wenn die Komponente gemouted ist, dann erst Daten laden!
     mounted() {
@@ -126,3 +157,34 @@ export default {
 };
 
 </script>
+
+<style  scoped>
+.search-form{
+    margin-top: 50px;
+    padding: 20px;
+    display: flex;
+    justify-self: left;
+    flex-direction:column;
+    width: 30%;
+    background: #f9f9f9;
+}
+.search-form label ,p {
+    margin: 10px;
+    font-weight: bold;
+    font-family: 'Bebas Neue', cursive;
+    color: #00ffd5;
+    text-shadow: -1px -1px 0 #000,
+    1px -1px 0 #000,
+    -1px 1px 0 #000,
+    1px 1px 0 #000;
+}
+th{
+    color: #00ffd5;
+    text-shadow: -1px -1px 0 #000,
+    1px -1px 0 #000,
+    -1px 1px 0 #000,
+    1px 1px 0 #000;
+
+}
+
+</style>

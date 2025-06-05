@@ -1,6 +1,5 @@
 import {createApp} from "vue";
 const route = window.location.pathname.replace(/\/$/, '');
-
 import { initialize } from "./warenkorb.js";
 import { ajax } from "./3-ajax1-static.js";
 import { mainPageJs } from "./mainPage.js";
@@ -12,6 +11,7 @@ import SiteHeader from "./VueComponents/siteheader.vue"
 import SiteBody from "./VueComponents/sitebody.vue";
 import SiteFooter from "./VueComponents/sitefooter.vue";
 import Impressum from "./VueComponents/impressum.vue";
+
 
 // Seiten ohne Navigation
 const excludedRoutes = ['/M4_Vue', '/login', '/register'];
@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const app = createApp(artikelListe);
         app.mount('#app');
         //Warenkorb
-        initialize();
+        //initialize();
     }
 
     if(route.startsWith('/newarticle')) {
