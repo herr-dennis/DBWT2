@@ -9,9 +9,11 @@
         "php": "^8.2",
         "fakerphp/faker": "^1.24",
         "laravel/framework": "^12.0",
+        "laravel/reverb": "^1.5",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.10.1",
-        "league/csv": "^9.23"
+        "league/csv": "^9.23",
+        "pusher/pusher-php-server": "^7.2"
     },
     "require-dev": {
         "laravel/pail": "^1.2.2",

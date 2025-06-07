@@ -18,10 +18,8 @@
 <header>
         @section("header")
 
-
         <div id="nav-app">
            <navi-header></navi-header>
-
         </div>
 
         @show

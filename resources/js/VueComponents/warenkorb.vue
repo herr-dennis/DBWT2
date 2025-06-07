@@ -1,5 +1,7 @@
 <script >
 
+import {getStateLoggedIn} from "../ulities/apiUnities.js";
+
 export default {
     props: {
         artikel: Array
@@ -8,8 +10,19 @@ export default {
         entferne(id) {
             this.$emit('entferne-artikel', id);
         },
+        isLoggedIn(){
+            getStateLoggedIn().then(response =>{
+                console.log(response);
+                return true;
+
+            }).catch(error=>{
+                console.log(error);
+                return false;
+            })
+        }
     },
     mounted() {
+
     }
 }
 

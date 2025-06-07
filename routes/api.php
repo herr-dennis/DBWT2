@@ -1,8 +1,11 @@
 <?php
+
+use App\Events\ArtikelVerkaufMessage;
 use App\Models\ab_articles;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
+use App\Events\NewMessage;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -165,4 +168,38 @@ $articles = DB::table('ab_user as u')
 
    return response()->json($articles);
 
+});
+
+//Trigger Endpunkt für einen Verkauften Artikel
+Route::post("articles/{id}/sold", function(Request $request, $id) {
+    try {
+        $articles = DB::table('ab_article as a')
+            ->join('ab_user as u', 'u.id', '=', 'a.ab_creator_id')
+            ->where('u.id', $id)
+            ->get();
+    } catch (\Exception $exception) {
+        return response()->json(['error' => $exception->getMessage()], 500);
+    }
+
+    //Wenn der User wirklich ein Artikel besitzt.
+    if($articles || empty($articles)){
+
+        $articleName =$articles->first()->ab_name ?:"";
+        $UserName = $articles->first()->ab_name ?:"";
+        $price = $articles->first()->ab_price ?:"";
+
+        $msg = "Hallo ". $UserName ." ihr Artikel ".$articleName." wurde verkauft"."(".$price." €)";
+        broadcast(new ArtikelVerkaufMessage($msg, $id));
+        return response()->json(['status' => 'Nachricht gesendet']);
+    }else{
+       return response()->json(['status' => 'User hat keinen eingestellen Artikel gesendet!'], 404);
+    }
+});
+
+Route::post('send-message', function (Request $request) {
+
+    $message = $request->input('msg');
+    $id = $request->input('id');
+    broadcast(new NewMessage($message, $id));
+    return response()->json(['status' => 'Nachricht gesendet']);
 });

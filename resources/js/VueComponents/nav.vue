@@ -30,13 +30,20 @@
     </div>
 
 
+    <verkaufs-pop-u-p>  </verkaufs-pop-u-p>
 
 </template>
 
 <script>
 
+import VerkaufsPopUP from "./VerkaufsPopUP.vue";
+
 let categories = [];
 export default {
+
+    components:{
+        VerkaufsPopUP,
+    },
 
     data(){
         return{

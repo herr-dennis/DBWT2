@@ -69,8 +69,9 @@
 <script>
 import { fetchArtikel } from "../fetchArtikel.js";
 import Impressum from './impressum.vue';
-import ArtikelSuche from "../artikelSuche.vue";
+import ArtikelSuche from "./artikelSuche.vue";
 import CalendarBox from './calender.vue';
+
 
 
 

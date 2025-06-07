@@ -36,7 +36,7 @@
                     <td>{{ artikel['created_at']|| "Fehlt" }}</td>
                     <td>
                         <img :src="`/images/${artikel.id}.jpg`"
-                             @error="onImgError" />
+                             @error="onImgError" loading="lazy" />
 
                     </td>
 
@@ -51,7 +51,7 @@
 <script>
 
 let filterActivate =false;
-import Warenkorb from "./VueComponents/warenkorb.vue";
+import Warenkorb from "./warenkorb.vue";
 export default {
     components:{
          Warenkorb

@@ -1,5 +1,6 @@
 <?php
-
+use App\Events\MaintenanceEvent;
+use App\Events\NewMessage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -52,4 +53,33 @@ Route::get("newsite" , function (){
 
 Route::get("M4_Vue" , function (){
     return view("Aufgaben.4-vue1-helloworld");
+});
+
+
+Route::get('/send-message', function () {
+    $time =now();
+    broadcast(new NewMessage('Hallo vom Server! '.$time));
+    return 'Nachricht gesendet!';
+});
+
+Route::get("M5_1" , function (){
+    return view("M5_Aufgaben.5-ws1-connect");
+});
+
+Route::get("M5_2" , function (){
+    return view("M5_Aufgaben.5-ws2-message");
+});
+Route::get("M5_3" , function (){
+    return view("M5_Aufgaben.5-ws3-selected-message");
+});
+
+Route::get('/wartung', function () {
+    broadcast(new MaintenanceEvent('In Kürze verbessern wir Abalo für Sie!
+Nach einer kurzen Pause sind wir wieder
+für Sie da! Versprochen.'));
+
+    return 'Nachricht gesendet!';
+});
+Route::get("Events" , function (){
+    return view("events");
 });
