@@ -30,6 +30,7 @@ class AuthController extends Controller
             $r["time"] = $request->session()->get('abalo_time');
             $r["mail"] = $request->session()->get('abalo_mail');
             $r["auth_"] = "true";
+            $r["id"] =1;
         }
         else $r["auth_"]="false";
         return response()->json($r);

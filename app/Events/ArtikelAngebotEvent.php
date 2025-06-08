@@ -8,16 +8,15 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class ArtikelVerkaufMessage implements ShouldBroadcast
+class ArtikelAngebotEvent  implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public string $message;
-    public int $id;
 
-    public function __construct($message, $id =0)
+
+    public function __construct($message)
     {
-        $this->id = $id;
         $this->message = $message;
     }
 
@@ -28,6 +27,6 @@ class ArtikelVerkaufMessage implements ShouldBroadcast
 
     public function broadcastAs(): string
     {
-        return 'artikelverkauft.message'; // hier der Event-Name im Frontend, können auch mehrere Events pro Channel geben!
+        return 'angebote.message'; // hier der Event-Name im Frontend, können auch mehrere Events pro Channel geben!
     }
 }

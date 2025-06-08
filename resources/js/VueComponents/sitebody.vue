@@ -62,7 +62,8 @@
 
 </template>
     <!-- :is="XX" rendert die Componente die drin steht. -->
-        <component v-else :is="currentComponent" />
+    <component v-else :is="currentComponent" :user-id="userID" />
+
 
 </template>
 
@@ -71,11 +72,9 @@ import { fetchArtikel } from "../fetchArtikel.js";
 import Impressum from './impressum.vue';
 import ArtikelSuche from "./artikelSuche.vue";
 import CalendarBox from './calender.vue';
-
-
-
-
+import {getStateLoggedIn} from "../ulities/apiUnities.js";
 export default {
+
     components: {
         impressum: Impressum,
         artikelsuche: ArtikelSuche,
@@ -90,6 +89,7 @@ export default {
             currentPrice : 0,
             currentImageSrc: "/images/see-no-evil-3444212_640.jpg",
             currentComponent: 'startseite',
+            userID : -1
         };
     },
 
@@ -120,6 +120,13 @@ export default {
     },
 
     mounted() {
+
+        getStateLoggedIn("visitor").then(resolve=>{
+            if(resolve){
+                this.userID=resolve["id"];
+            }
+        })
+
         fetchArtikel("")
             .then((response) => {
                 this.newArticles = response;

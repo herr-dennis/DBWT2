@@ -17,23 +17,21 @@ Route::get('/articles', function (Request $request) {
     $data = ab_articles::query();
     $limit = null;
 
-    if($search) {
-        if(is_numeric($search)){
+    if ($search) {
+        if (is_numeric($search)) {
             $limit = $search;
         }
     }
 
-    if ($search && $limit===null) {
+    if ($search && $limit === null) {
         $search = strtolower($search);
 
         $data->select("*")
             //whereRaw nativ SQL
             ->whereRaw('LOWER(ab_name) LIKE ?', ['%' . $search . '%']);
-    }
-    elseif ($limit){
+    } elseif ($limit) {
         $data->inRandomOrder($limit)->limit($limit);
-    }
-    else {
+    } else {
         $data->select("*");
     }
 
@@ -66,9 +64,9 @@ Route::post('/articles', function (Request $request) {
                 "updated_at" => now()
             ]);
 
-            return response()->json(["id" => $id],200);
+            return response()->json(["id" => $id], 200);
         } catch (\Exception $exception) {
-            return response()->json(["error" => $exception->getMessage()],400);
+            return response()->json(["error" => $exception->getMessage()], 400);
         }
     } else {
         return response()->json(["error" => "Fehler beim Einpflegen in die Datenbank!"], 500);
@@ -91,17 +89,17 @@ Route::delete('/shoppingcart/{shoppingcartid}/articles/{articleId}', function ($
     }
 });
 
-Route::post("/shoppingcart", function(Request $request) {
+Route::post("/shoppingcart", function (Request $request) {
 
     //return response()->json($request->all());
 
     $user_name = $request->post("ab_name");
     $article_name = $request->post("article_name"); //
 
-    if(!$article_name){
+    if (!$article_name) {
         return response()->json(['error' => '$article_name nicht gefunden'], 404);
     }
-    if(!$user_name){
+    if (!$user_name) {
         return response()->json(['error' => '$user_name nicht gefunden'], 404);
     }
     try {
@@ -153,25 +151,36 @@ Route::post("/shoppingcart", function(Request $request) {
 });
 
 
-Route::get("shoppingcart", function(Request $request) {
+Route::get("shoppingcart", function (Request $request) {
 
     $user_name = $request->input("ab_name");
     $user_id = DB::table("ab_user")->where("ab_name", $user_name)->value("id");
 
-$articles = DB::table('ab_user as u')
-    ->join('ab_shoppingcart as sc', 'sc.ab_creator_id', '=', 'u.id')
-    ->join('ab_shoppingcart_item as sci', 'sci.ab_shoppingcart_id', '=', 'sc.id')
-    ->join('ab_article as a', 'a.id', '=', 'sci.ab_article_id')
-    ->where('u.id', $user_id)
-    ->select('a.*', 'sci.created_at as hinzugefügt_am' , 'sc.id', 'sci.ab_article_id' )
-    ->get();
+    $articles = DB::table('ab_user as u')
+        ->join('ab_shoppingcart as sc', 'sc.ab_creator_id', '=', 'u.id')
+        ->join('ab_shoppingcart_item as sci', 'sci.ab_shoppingcart_id', '=', 'sc.id')
+        ->join('ab_article as a', 'a.id', '=', 'sci.ab_article_id')
+        ->where('u.id', $user_id)
+        ->select('a.*', 'sci.created_at as hinzugefügt_am', 'sc.id', 'sci.ab_article_id')
+        ->get();
 
-   return response()->json($articles);
+    return response()->json($articles);
 
 });
 
+Route::get("user/{id}/articles", function ($id) {
+
+    try {
+        $data = DB::table("ab_user as u")->join("ab_article as a", "u.id", "=", "a.ab_creator_id")
+            ->where("u.id", "=", $id)->get();
+        return response()->json($data);
+    } catch (\Exception $exception) {
+        return response()->json(['error' => $exception->getMessage()], 500);
+    }
+});
+
 //Trigger Endpunkt für einen Verkauften Artikel
-Route::post("articles/{id}/sold", function(Request $request, $id) {
+Route::post("articles/{id}/sold", function (Request $request, $id) {
     try {
         $articles = DB::table('ab_article as a')
             ->join('ab_user as u', 'u.id', '=', 'a.ab_creator_id')
@@ -182,17 +191,17 @@ Route::post("articles/{id}/sold", function(Request $request, $id) {
     }
 
     //Wenn der User wirklich ein Artikel besitzt.
-    if($articles || empty($articles)){
+    if ($articles || empty($articles)) {
 
-        $articleName =$articles->first()->ab_name ?:"";
-        $UserName = $articles->first()->ab_name ?:"";
-        $price = $articles->first()->ab_price ?:"";
+        $articleName = $articles->first()->ab_name ?: "";
+        $UserName = $articles->first()->ab_name ?: "";
+        $price = $articles->first()->ab_price ?: "";
 
-        $msg = "Hallo ". $UserName ." ihr Artikel ".$articleName." wurde verkauft"."(".$price." €)";
+        $msg = "Hallo " . $UserName . " ihr Artikel " . $articleName . " wurde verkauft" . "(" . $price . " €)";
         broadcast(new ArtikelVerkaufMessage($msg, $id));
         return response()->json(['status' => 'Nachricht gesendet']);
-    }else{
-       return response()->json(['status' => 'User hat keinen eingestellen Artikel gesendet!'], 404);
+    } else {
+        return response()->json(['status' => 'User hat keinen eingestellen Artikel gesendet!'], 404);
     }
 });
 

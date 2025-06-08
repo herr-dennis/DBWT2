@@ -15,7 +15,7 @@ class NewMessage implements ShouldBroadcast
     public string $message;
     public int $id;
 
-    public function __construct( $message , $id)
+    public function __construct( $message , $id = 0)
     {
         $this->id = $id;
         $this->message = $message;
